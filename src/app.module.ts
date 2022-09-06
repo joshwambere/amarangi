@@ -8,6 +8,7 @@ import { TypeOrmConfigService } from './shared/configs/db/typeorm.service';
 import { join } from 'path';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
+import { SpotsModule } from "./spots/spots.module";
 
 const envFilePath: string | any = getEnvs(join(__dirname, '..')) || process.env;
 
@@ -17,6 +18,7 @@ const envFilePath: string | any = getEnvs(join(__dirname, '..')) || process.env;
     TypeOrmModule.forRootAsync({ useClass: TypeOrmConfigService }),
     UsersModule,
     AuthModule,
+    SpotsModule
   ],
   controllers: [AppController],
   providers: [AppService],
