@@ -12,7 +12,7 @@ import {
 } from "@nestjs/common";
 import { SpotsService } from './spots.service';
 import { CreateSpotDto } from './dto/create-spot.dto';
-import { ApiBearerAuth, ApiProperty, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiOperation, ApiProperty, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { AuthGuard } from "@nestjs/passport";
 import { RolesGuard } from "../auth/guards/role.guard";
 
@@ -26,10 +26,10 @@ export class SpotsController {
   @Post()
   @SetMetadata('role', 'ADMIN')
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @ApiProperty({
-    deprecated: true,
-    description: 'Create spot',
+  @ApiOperation({
+    summary: 'Create spot',
   })
+  @ApiResponse({ status: 201, description: 'on success' })
   create(@Body() createSpotDto: CreateSpotDto) {
     return this.spotsService.create(createSpotDto);
   }
@@ -37,25 +37,29 @@ export class SpotsController {
   @Get()
   @SetMetadata('role', 'ADMIN')
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @ApiProperty({
-    deprecated: true,
-    description: 'Create spot',
+  @ApiOperation({
+    summary: 'Find all spots',
   })
+  @ApiResponse({ status: 200, description: 'on success' })
   findAll() {
     return this.spotsService.findAll();
   }
 
   @Get('/spot/pending')
-  @ApiProperty({
-    deprecated: true,
-    description: 'Get Pending spot',
+  @ApiOperation({
+    summary: 'Get Pending spot',
   })
+  @ApiResponse({ status: 200, description: 'on success' })
   findAvailableSpots() {
     return this.spotsService.findAvailableSpots();
   }
 
 
   @Get(':id')
+  @ApiOperation({
+    summary: 'Get one spot by id',
+  })
+  @ApiResponse({ status: 200, description: 'on success' })
   findOne(@Param('id',ParseUUIDPipe) id: string) {
     return this.spotsService.findOne(id);
   }
@@ -63,10 +67,10 @@ export class SpotsController {
   @Patch(':id')
   @SetMetadata('role', 'ADMIN')
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @ApiProperty({
-    deprecated: true,
-    description: 'update spot',
+  @ApiOperation({
+    summary: 'Update spot',
   })
+  @ApiResponse({ status: 200, description: 'on success' })
   update(@Param('id',ParseUUIDPipe) id: string, @Body() updateSpotDto: CreateSpotDto) {
     return this.spotsService.update(id, updateSpotDto);
   }
@@ -74,10 +78,10 @@ export class SpotsController {
   @Delete(':id')
   @SetMetadata('role', 'ADMIN')
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @ApiProperty({
-    deprecated: true,
-    description: 'Delete spot',
+  @ApiOperation({
+    summary: 'Delete spot',
   })
+  @ApiResponse({ status: 200, description: 'on success' })
   remove(@Param('id',ParseUUIDPipe) id: string) {
     return this.spotsService.remove(id);
   }

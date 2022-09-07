@@ -10,6 +10,7 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { SpotsModule } from "./spots/spots.module";
 import { VaccinationsModule } from "./vaccinations/vaccinations.module";
+import { BookingsModule } from "./bookings/bookings.module";
 
 
 const envFilePath: string | any = getEnvs(join(__dirname, '..')) || process.env;
@@ -21,7 +22,8 @@ const envFilePath: string | any = getEnvs(join(__dirname, '..')) || process.env;
     UsersModule,
     AuthModule,
     SpotsModule,
-    VaccinationsModule
+    VaccinationsModule,
+    BookingsModule
   ],
   controllers: [AppController],
   providers: [AppService],

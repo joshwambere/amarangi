@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Param, Delete, SetMetadata, UseGuards } from "@nestjs/common";
 import { UsersService } from './users.service';
 import { SignupDto } from "../auth/dto/signup.dto";
-import { ApiBearerAuth, ApiProperty, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiOperation, ApiProperty, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { AuthGuard } from "@nestjs/passport";
 import { RolesGuard } from "../auth/guards/role.guard";
 
@@ -12,38 +12,38 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  @ApiProperty({
-    deprecated: true,
-    description: 'Create Admin user',
+  @ApiOperation({
+    summary: 'create Admin user',
   })
+  @ApiResponse({ status: 201, description: 'on success' })
   @UseGuards(AuthGuard('jwt'))
   create(@Body() createUserDto: SignupDto) {
     return this.usersService.create(createUserDto);
   }
 
   @Get()
-  @ApiProperty({
-    deprecated: true,
-    description: 'Find all s',
+  @ApiOperation({
+    summary: 'Get all Users',
   })
+  @ApiResponse({ status: 200, description: 'on success' })
   findAll() {
     return this.usersService.findAll();
   }
 
   @Get(':id')
-  @ApiProperty({
-    deprecated: true,
-    description: 'Find one user',
+  @ApiOperation({
+    summary: 'Get one user by id',
   })
+  @ApiResponse({ status: 200, description: 'on success' })
   findOne(@Param('id') id: string) {
     return this.usersService.findOne(id);
   }
 
   @Delete(':id')
-  @ApiProperty({
-    deprecated: true,
-    description: 'Delete user',
+  @ApiOperation({
+    summary: 'Delete one User',
   })
+  @ApiResponse({ status: 200, description: 'on success' })
   @SetMetadata('role', 'ADMIN')
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   remove(@Param('id') id: string) {

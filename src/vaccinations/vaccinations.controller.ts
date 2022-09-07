@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, SetMetadata, UseGuar
 import { VaccinationsService } from './vaccinations.service';
 import { CreateVaccinationDto } from './dto/create-vaccination.dto';
 import { UpdateVaccinationDto } from './dto/update-vaccination.dto';
-import { ApiBearerAuth, ApiProperty, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiOperation, ApiProperty, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { AuthGuard } from "@nestjs/passport";
 import { RolesGuard } from "../auth/guards/role.guard";
 
@@ -19,6 +19,10 @@ export class VaccinationsController {
   @SetMetadata('role', 'ADMIN')
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Post()
+  @ApiOperation({
+    summary: 'create vaccination',
+  })
+  @ApiResponse({ status: 201, description: 'on success' })
   create(@Body() createVaccinationDto: CreateVaccinationDto) {
     return this.vaccinationsService.create(createVaccinationDto);
   }
@@ -26,20 +30,20 @@ export class VaccinationsController {
   @Get()
   @SetMetadata('role', 'ADMIN')
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @ApiProperty({
-    deprecated: true,
-    description: 'Find all vaccination',
+  @ApiOperation({
+    summary: 'Find all vaccinations',
   })
+  @ApiResponse({ status: 200, description: 'on success' })
   findAll() {
     return this.vaccinationsService.findAll();
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @ApiProperty({
-    deprecated: true,
-    description: 'Find all vaccination',
-  })
   @Get(':code')
+  @ApiOperation({
+    summary: 'Get vaccination status by code',
+  })
+  @ApiResponse({ status: 200, description: 'on success' })
   findOne(@Param('code') code: string) {
     return this.vaccinationsService.findOne(code);
   }
@@ -47,10 +51,10 @@ export class VaccinationsController {
   @Patch(':id')
   @SetMetadata('role', 'ADMIN')
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @ApiProperty({
-    deprecated: true,
-    description: 'update vaccination',
+  @ApiOperation({
+    summary: 'Update vaccination',
   })
+  @ApiResponse({ status: 200, description: 'on success' })
   update(@Param('id') id: string, @Body() updateVaccinationDto: UpdateVaccinationDto) {
     return this.vaccinationsService.update(id, updateVaccinationDto);
   }
@@ -58,10 +62,10 @@ export class VaccinationsController {
   @Delete(':id')
   @SetMetadata('role', 'ADMIN')
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @ApiProperty({
-    deprecated: true,
-    description: 'delete vaccination',
+  @ApiOperation({
+    summary: 'Delete vaccination',
   })
+  @ApiResponse({ status: 200, description: 'on success' })
   remove(@Param('id') id: string) {
     return this.vaccinationsService.remove(id);
   }
