@@ -21,7 +21,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
   app.use(cookieParser());
 
-  await app.listen(configService.get('NODE_ENV')=='production'?process.env.port:Port||3000, () => {
+  await app.listen(configService.get('NODE_ENV')=='production'?process.env.PORT:Port||3000, () => {
     console.info(`=====================================`);
     console.info(`🚀 App listening on the port: ${Port}`);
     console.info(`=====================================`);
