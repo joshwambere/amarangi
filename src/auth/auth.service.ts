@@ -1,22 +1,15 @@
-import {
-  BadRequestException,
-  ForbiddenException,
-  Injectable,
-  InternalServerErrorException,
-} from '@nestjs/common';
-import { LoginDto } from './dto/login.dto';
-import { SignupDto } from './dto/signup.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { User } from '../users/entities/user.entity';
-import { Not, Repository, UpdateResult } from 'typeorm';
+import { BadRequestException, ForbiddenException, Injectable, InternalServerErrorException } from "@nestjs/common";
+import { LoginDto } from "./dto/login.dto";
+import { SignupDto } from "./dto/signup.dto";
+import { InjectRepository } from "@nestjs/typeorm";
+import { User } from "../users/entities/user.entity";
+import { Not, Repository, UpdateResult } from "typeorm";
 
-import { AuthResponseInterface } from '../shared/interfaces/auth.response.interface';
-import { hashService, compareHash } from '../shared/utils/hash.service';
-import {
-  TokenInterface,
-  tokensType,
-} from '../shared/interfaces/token.interface';
-import { JwtService } from '@nestjs/jwt';
+import { AuthResponseInterface } from "../shared/interfaces/auth.response.interface";
+import { compareHash, hashService } from "../shared/utils/hash.service";
+import { TokenInterface, tokensType } from "../shared/interfaces/token.interface";
+import { JwtService } from "@nestjs/jwt";
+import { RoleType } from "../shared/enums/user.role.enum";
 
 @Injectable()
 export class AuthService {
@@ -55,6 +48,41 @@ export class AuthService {
       throw new InternalServerErrorException(err.message);
     }
   }
+
+  async signUpAdmin(data: SignupDto): Promise<AuthResponseInterface<User>> {
+    const user = await this.checkUserExist(data.email); // check if user already exist
+    if (user) {
+      throw new BadRequestException('User already exist');
+    }
+
+    const hashedPassword = await hashService(data.password);
+
+    try {
+
+      const newUser = this.authRepository.create({
+        ...data,
+        password: hashedPassword,
+        role: RoleType.ADMIN,
+      });
+
+      const createdUser = await this.authRepository.save(newUser);
+      const TokenData = {
+        id: createdUser.id,
+      };
+
+      const tokens: tokensType = await this.signToken(TokenData);
+
+      await this.saveRtHash(TokenData, tokens.refreshToken);
+      return {
+        message: 'Registration successful',
+        tokens: tokens,
+        data: createdUser,
+      };
+    } catch (err) {
+      throw new InternalServerErrorException(err.message);
+    }
+  }
+
 
   async checkUserExist(email): Promise<boolean> {
     const user = await this.authRepository.findOne({ where: { email } });
