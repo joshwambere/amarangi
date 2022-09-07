@@ -1,4 +1,8 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateNotificationDto } from './create-notification.dto';
+import { IsNotEmpty, IsString } from "class-validator";
+import { NotificationStatus } from "../enums/notification.status.enum";
 
-export class UpdateNotificationDto extends PartialType(CreateNotificationDto) {}
+export class UpdateNotificationDto  {
+  @IsNotEmpty()
+  @IsString()
+  status: NotificationStatus;
+}

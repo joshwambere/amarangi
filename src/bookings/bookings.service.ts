@@ -7,6 +7,7 @@ import { Repository } from "typeorm";
 import { User } from "../users/entities/user.entity";
 import { Spot } from "../spots/entities/spot.entity";
 import { SpotStatus } from "../shared/enums/spot.status.enum";
+import { NotificationsService } from "../notifications/notifications.service";
 
 @Injectable()
 export class BookingsService {
@@ -14,6 +15,7 @@ export class BookingsService {
     @InjectRepository(Booking) private bookingRepository: Repository<Booking>,
     @InjectRepository(User) private userRepository: Repository<User>,
     @InjectRepository(Spot) private spotRepository: Repository<Spot>,
+    private readonly notificationService: NotificationsService
   ) {}
 
   async create(createBookingDto: CreateBookingDto,user:User) {
@@ -25,6 +27,7 @@ export class BookingsService {
     const bookings = await this.bookingRepository.save({ ...createBookingDto, user, spot });
     if (bookings) {
       await this.spotRepository.save({ ...spot, status: SpotStatus.BOOKED });
+      await this.notificationService.create({creator:user.email,message:`has booked spot ${spot.name}`})
     }
     return bookings;
   }
