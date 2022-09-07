@@ -1,4 +1,10 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateVaccinationDto } from './create-vaccination.dto';
+import { VaccinationStatus } from "../enums/vaccination.status.enum";
+import { ApiProperty } from "@nestjs/swagger";
+import { IsNotEmpty, IsString } from "class-validator";
 
-export class UpdateVaccinationDto extends PartialType(CreateVaccinationDto) {}
+export class UpdateVaccinationDto {
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsString()
+  status: VaccinationStatus;
+}

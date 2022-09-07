@@ -15,13 +15,13 @@ async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/v1/docs', app, document);
-
+  const Port = process.env.PORT || 3000;
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
   app.use(cookieParser());
 
-  await app.listen(process.env.PORT||3000, () => {
+  await app.listen(Port, () => {
     console.info(`=====================================`);
-    console.info(`🚀 App listening on the port: ${process.env.PORT}`);
+    console.info(`🚀 App listening on the port: ${Port}`);
     console.info(`=====================================`);
   });
 }

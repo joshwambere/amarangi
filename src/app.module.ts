@@ -9,6 +9,7 @@ import { join } from 'path';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { SpotsModule } from "./spots/spots.module";
+import { VaccinationsModule } from "./vaccinations/vaccinations.module";
 
 const envFilePath: string | any = getEnvs(join(__dirname, '..')) || process.env;
 
@@ -18,7 +19,8 @@ const envFilePath: string | any = getEnvs(join(__dirname, '..')) || process.env;
     TypeOrmModule.forRootAsync({ useClass: TypeOrmConfigService }),
     UsersModule,
     AuthModule,
-    SpotsModule
+    SpotsModule,
+    VaccinationsModule
   ],
   controllers: [AppController],
   providers: [AppService],
